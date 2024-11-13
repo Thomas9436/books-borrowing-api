@@ -20,7 +20,7 @@ app.use(
     })
 );
 
-app.use('/api/', routes);
+app.use(routes);
 
 const swaggerOptions = {
     swaggerDefinition: {

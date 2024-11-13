@@ -57,7 +57,6 @@ exports.borrowBook = async (req, res) => {
     }
 };
 
-
 // Mettre à jour le statut de l'emprunt
 exports.updateBorrowStatus = async (req, res) => {
     const { status } = req.body;

@@ -1,5 +1,5 @@
 // borrow-service/services/booksBorrowService.js
-const mqttClient = require('../config/mqttConfig');
+const mqttClient = require('../config/mqttClient');
 
 const publishEvent = (topic, message) => {
     mqttClient.publish(topic, JSON.stringify(message), (err) => {

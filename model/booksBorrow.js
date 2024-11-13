@@ -7,10 +7,10 @@ const borrowSchema = new mongoose.Schema({
     borrowedDate: { type: Date, default: Date.now }, // Date de l'emprunt
     dueDate: { type: Date, required: true }, // Date de retour prévue
     returnedDate: { type: Date }, // Date de retour réelle (si retourné)
-    status: { 
-        type: String, 
-        enum: ['available', 'borrowed', 'returned', 'overdue'], 
-        default: 'available' 
+    status: {
+        type: String,
+        enum: ['available', 'borrowed', 'returned', 'overdue'],
+        default: 'available'
     } // État de l'emprunt
 });
 

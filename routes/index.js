@@ -3,6 +3,6 @@ const booksBorrow = require('../routes/booksBorrow');
 
 const router = express.Router();
 
-router.use('/books-borrow', booksBorrow);
+router.use(booksBorrow);
 
 module.exports = router;
