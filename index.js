@@ -6,11 +6,16 @@ const app = express();
 require('dotenv').config();
 const connectDB = require('./database/db');
 const routes = require('./routes/index');
+const { consumeUserResponses, consumeBookManageResponses } = require('./services/consumers/bookBorrowConsumer');
 
 connectDB();
 const port = process.env.PORT || 6000;
 
 app.use(express.json());
+
+// Lancer les consumers pour écouter les réponses
+consumeUserResponses();
+consumeBookManageResponses();
 
 app.use(
     cors({
