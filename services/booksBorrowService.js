@@ -1,5 +1,5 @@
 const Borrow = require('../model/booksBorrow');
-const { publishBorrowEvent } = require('../producers/borrowProducer');
+const { publishBorrowEvent } = require('./producers/bookBorrowProducer');
 const { consumeBookManageResponses, consumeUserResponses} = require('./consumers/bookBorrowConsumer');
 
 const pendingResponses = new Map();
@@ -79,10 +79,15 @@ async function waitForResponse(queue, correlationId, timeoutDuration = 5000) {
         pendingResponses.set(correlationId, { resolve, timeout });
 
         if (queue === 'users.responses') {
-            consumeUserResponses(); // Assurez-vous que ce consumer est actif
+            consumeUserResponses(); 
         } else if (queue === 'manage.responses') {
             consumeBookManageResponses(); // Consumer pour book-manage
         }
     });
 }
+
+// Fonction pour générer un ID unique
+function generateCorrelationId() {
+    return `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+  }
 
