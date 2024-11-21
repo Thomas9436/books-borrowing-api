@@ -228,7 +228,8 @@ Il faut lancer le conteneur RabbitMQ même si on test tous les services en local
 rabbitmq:
 image: rabbitmq:3-management
 container_name: rabbitmq
-ports: - "5672:5672" # AMQP port - "15672:15672" # Management UI
+ports: - "5672:5672" # AMQP
+port - "15672:15672" # Management UI
 environment:
 RABBITMQ_DEFAULT_USER: user
 RABBITMQ_DEFAULT_PASS: password
