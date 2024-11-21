@@ -226,13 +226,14 @@ Traefik n'a pas d'intêret en local.
 Il faut lancer le conteneur RabbitMQ même si on test tous les services en local :
 ```yaml
 rabbitmq:
-image: rabbitmq:3-management
-container_name: rabbitmq
-ports: - "5672:5672" # AMQP
-port - "15672:15672" # Management UI
-environment:
-RABBITMQ_DEFAULT_USER: user
-RABBITMQ_DEFAULT_PASS: password
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
 ```
 4. Users API
    URL : http://localhost:4000
