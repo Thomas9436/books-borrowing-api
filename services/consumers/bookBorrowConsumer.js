@@ -3,11 +3,29 @@ const connectRabbitMQ = require('../../clients/rabbitmq');
 // Map pour stocker les réponses en attente
 const pendingResponses = new Map();
 
-function resolvePendingResponse(correlationId, result) {
+//Fonction pour attendre de consommer les events responses des autres apis
+async function waitForResponse(queue, correlationId, timeoutDuration = 5000) {
+    return new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+            reject(new Error(`Timeout waiting for response with correlationId: ${correlationId}`));
+        }, timeoutDuration);
+
+        pendingResponses.set(correlationId, { resolve, timeout });
+
+        if (queue === 'users.responses') {
+            consumeUserResponses();
+        } else if (queue === 'manage.responses') {
+            consumeBookManageResponses(); // Consumer pour book-manage
+        }
+    });
+}
+
+function resolvePendingResponse(correlationId, result, response) {
     if (pendingResponses.has(correlationId)) {
         const { resolve, timeout } = pendingResponses.get(correlationId);
         clearTimeout(timeout); // Annule le timeout
-        resolve(result); // Résout la promesse avec le résultat
+        console.log('Resolving pending response for correlationId:', correlationId, response);
+        resolve(response); // Résout la promesse avec la réponse complète
         pendingResponses.delete(correlationId); // Nettoie la map
     }
 }
@@ -36,7 +54,7 @@ async function consumeUserResponses() {
                 console.log(`Received user response:`, response);
 
                 const { correlationId, status } = response;
-                resolvePendingResponse(correlationId, status === 'success'); // Résout ou rejette
+                resolvePendingResponse(correlationId, status === 'success', response);
             }
         } catch (error) {
             console.error('Error processing user response:', error);
@@ -56,7 +74,7 @@ async function consumeBookManageResponses() {
 
     await channel.assertExchange(exchange, 'topic', { durable: true });
     await channel.assertQueue(queue, { durable: true });
-    await channel.bindQueue(queue, exchange, 'book-manage.response.*');
+    await channel.bindQueue(queue, exchange, 'book.response.*');
 
     console.log(`Waiting for book-manage responses in queue: ${queue}...`);
 
@@ -67,7 +85,7 @@ async function consumeBookManageResponses() {
                 console.log(`Received book-manage response:`, response);
 
                 const { correlationId, status } = response;
-                resolvePendingResponse(correlationId, status === 'success'); // Résout ou rejette
+                resolvePendingResponse(correlationId, status === 'success', response);
             }
         } catch (error) {
             console.error('Error processing book-manage response:', error);
@@ -79,6 +97,6 @@ async function consumeBookManageResponses() {
 
 module.exports = {
     consumeUserResponses,
-    resolvePendingResponse,
-    consumeBookManageResponses
+    consumeBookManageResponses,
+    waitForResponse
 };

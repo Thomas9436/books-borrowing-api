@@ -7,14 +7,8 @@ const router = express.Router();
 // Emprunter un livre
 router.post('/', borrowController.borrowBook);
 
-// Mettre à jour le statut de l'emprunt (ex: le retourner)
-router.patch('/:id/status', borrowController.updateBorrowStatus);
-
 // Prolonger la durée de l'emprunt
-router.patch('/:id/extend', borrowController.extendBorrowDueDate);
-
-// Supprimer un emprunt
-router.delete('/:id', borrowController.deleteBorrow);
+router.post('/extend/:id', borrowController.extendBorrowDueDate);
 
 // Obtenir tous les emprunts
 router.get('/', borrowController.getAllBorrows);
