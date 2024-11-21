@@ -153,7 +153,7 @@ Mot de passe par défaut : password
 npm start
 ```
 2. Modifier le fichier .env de chaque service pour lancer RabbitMQ en local et non avec docker :
-`plaintext
+```plaintext
 PORT=6000 //Port de l'api Books-borrow
 #Local
 RABBITMQ_URL=amqp://user:password@localhost:5672
